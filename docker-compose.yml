@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # webapp:
+  #   build: ./frontend-webapp
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - ubuntu-service
+  #   networks:
+  #     - app-network
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+
+  ubuntu-service:
+    build: ./database
+    container_name: database
+    ports:
+      - "6379:6379"
+      - "5432:5432"
+    volumes:
+      - redisdata:/var/lib/redis/data
+      - postgresdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    # networks:
+    #   - app-network
+volumes:
+  redisdata:
+  postgresdata:
+
+# networks:
+#   app-network:
+#     driver: bridge
